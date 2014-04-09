@@ -11,6 +11,8 @@ class Contact(object):
 		self.address = address
 
 	def getAttr(self,attr):
+		"""We can use this to sort the contacts by attribute """
+
 		if attr=='firstname': return self.firstname
 		elif attr='lastname': return self.lastname
 		elif attr='phone': return self.phone
@@ -20,7 +22,7 @@ class Contact(object):
 
 class AddressBook(object):
 
-	def __init__(self,csvfile):
+	def __init__(self,csvfile=''):
 		self.contacts = []
 
 	def sort(self,attr):
@@ -30,8 +32,16 @@ class AddressBook(object):
 	def addContact(self,firstname='',lastname='',phone='',address='',zipcode=''):
 		self.contacts += Contact(self,firstname,lastname,phone,address,zipcode)
 
+class ABTest(unittest.TestCase):
+	def __init__(self):
+		super(ABTest,self).__init__()
+		self.ab = AddressBook()
 
-def 
+	def testAdd(self):
+		self.ab.addContact('Tester','Mcgee','985.555.555','555 foo lane','70471')
+		self.assertEqual( self.ab.contacts[0].firstname,'Tester')
+
+
 
 
 
