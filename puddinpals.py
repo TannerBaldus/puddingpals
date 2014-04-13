@@ -47,10 +47,14 @@ class AddressBook(object):
 		""" adds new contact instance to contact list """
 		self.contacts.append(Contact(name, phone, address, zipcode))
 
-	def removeContact(self,selected):
+	def removeSelected(self,selected):
 		"""remove contact list from self.contacts """
 		for index in selected:
 			del self.contacts[index]
+
+	def setTSVfile(self,filepath):
+		self.tsvfile = open()
+
 
 
 	def loadTSV(self, filepath):
@@ -92,6 +96,7 @@ class ABTest(unittest.TestCase):
 		ab.removeContact(selected)
 		abNames = [contact.name for contact in ab.contacts]
 		self.assertEqual(names[1:],abNames)
+
 
 	def testLoadTSV(self):
 		ab = AddressBook()
