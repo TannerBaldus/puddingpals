@@ -1,35 +1,6 @@
 import csv
 import unittest
-import docopt
-
-class Contact(object):
-	def __init__(self,name,phone,address,zipcode):
-		self.name = name
-		self.phone = phone
-		self.zipcode = zipcode
-		self.address = address
-		self.attrs = {'name':self.name,'phone':self.phone,'zipcode':self.zipcode,'address':self.address}
-
-	def getAttr(self,attr):
-		"""We can use this to sort the contacts by attribute """
-		return self.attrs[attr]
-
-	def setName(self,name):
-		self.name = name
-
-	def setPhone(self,phone):
-		self.phone = phone
-
-	def setZip(self,zipcode):
-		self.zipcode = zipcode
-
-	def setAddress(self,address):
-		self.address = address
-
-
-
-
-
+from Contact import Contact
 
 class AddressBook(object):
 
@@ -63,6 +34,15 @@ class AddressBook(object):
 		for row in reader:
 			contact = Contact(row['name'],row['phone'], row['address'], row['zip'])
 			self.contacts.append(contact)
+
+
+	def writeTSV(self, filepath):
+		tsv = open(filepath,'w')
+		writerr = csv.DictWriter(tsv,)
+		fieldnames = ['name','phone','address','zip']
+		writer.writerow(dict((fn,fn) for fn in fieldnames))
+		for contact in self.contacts:
+			writer.writerow(contact.attrs)
 
 
 
@@ -106,19 +86,22 @@ class ABTest(unittest.TestCase):
 		self.assertEqual(ab.contacts[1].name, 'Dean Baldus')
 
 
+	def testWriteTSV(self):
+		ab = AddressBook()
+		names = ['Adam','Bane','Charles']
+		ab.addContact(names[0],'555555555','321 lane')
+		ab.addContact(names[1],'555444666','553 Dr')
+		ab.addContact(names[2], '555333222','675 road')
+		ab.writeTSV('testero.tsv')
+		ab2 = AddressBook()
+		ab2.loadTSV('testero.tsv')
+		self.assertEqual(ab2.contacts,ab.contacts)
+
+
+
 
 
 
 
 if __name__ == '__main__':
 	unittest.main()
-
-
-
-
-
-
-
-
-
-		
