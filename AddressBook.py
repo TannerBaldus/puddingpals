@@ -4,11 +4,8 @@ from Contact import Contact
 
 class AddressBook(object):
 
-	def __init__(self,csvfile=''):
+	def __init__(self):
 		self.contacts = []  ##holds contact objects
-		# csvfile = open(csvfile,'rb')
-		# self.reader=reader(csvfile)
-
 
 	def sort(self,attr,isDescending):
 		contactAttr = lambda contact: contact.getAttr(attr)
@@ -24,7 +21,8 @@ class AddressBook(object):
 			del self.contacts[index]
 
 	def setTSVfile(self,filepath):
-		self.tsvfile = open()
+		self.tsvfile = filepath
+
 
 
 
@@ -38,8 +36,8 @@ class AddressBook(object):
 
 	def writeTSV(self, filepath):
 		tsv = open(filepath,'w')
-		writerr = csv.DictWriter(tsv,)
 		fieldnames = ['name','phone','address','zip']
+		writer = csv.DictWriter(tsv, delimiter='\t', fieldnames=fieldnames)
 		writer.writerow(dict((fn,fn) for fn in fieldnames))
 		for contact in self.contacts:
 			writer.writerow(contact.attrs)
@@ -57,25 +55,21 @@ class ABTest(unittest.TestCase):
 
 		
 	def testSort(self):
-		ab = AddressBook()
 		names = ['Adam','Bane','Charles']
-		ab.addContact(names[2])
-		ab.addContact(names[1])
-		ab.addContact(names[0])
+		ab = AddressBook()
+		self.fillAb(ab)
 		ab.sort('name',False)
 		abNames = [contact.name for contact in ab.contacts]
 		self.assertEqual(names,abNames)
 
 	def testRemove(self):
 		ab = AddressBook()
-		names = ['Adam','Bane','Charles']
-		ab.addContact(names[0])
-		ab.addContact(names[1])
-		ab.addContact(names[2])
+		self.fillAb(ab) ## Adam Charles Bane
+		names = ['Charles','Bane']
 		selected = [0]
-		ab.removeContact(selected)
+		ab.removeSelected(selected)
 		abNames = [contact.name for contact in ab.contacts]
-		self.assertEqual(names[1:],abNames)
+		self.assertEqual(names,abNames)
 
 
 	def testLoadTSV(self):
@@ -88,14 +82,21 @@ class ABTest(unittest.TestCase):
 
 	def testWriteTSV(self):
 		ab = AddressBook()
-		names = ['Adam','Bane','Charles']
-		ab.addContact(names[0],'555555555','321 lane')
-		ab.addContact(names[1],'555444666','553 Dr')
-		ab.addContact(names[2], '555333222','675 road')
+		self.fillAb(ab)
 		ab.writeTSV('testero.tsv')
 		ab2 = AddressBook()
 		ab2.loadTSV('testero.tsv')
-		self.assertEqual(ab2.contacts,ab.contacts)
+		abNames = [contact.name for contact in ab.contacts]
+		ab2Names = [contact.name for contact in ab2.contacts]
+		self.assertEqual(abNames,ab2Names)
+
+	def fillAb(self, ab):
+		names = ['Adam','Bane','Charles']
+		ab.addContact(names[0],'555555555','321 lane')
+		ab.addContact(names[2],'555444666','553 Dr')
+		ab.addContact(names[1], '555333222','675 road')
+
+
 
 
 
