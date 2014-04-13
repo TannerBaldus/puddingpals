@@ -6,10 +6,16 @@ class AddressBook(object):
 
 	def __init__(self):
 		self.contacts = []  ##holds contact objects
+		self.changed = False
 
-	def sort(self,attr,isDescending):
+	def sort(self,attr,isDescending=False):
 		contactAttr = lambda contact: contact.getAttr(attr)
+
+		if attr=='name':
+			contactAttr = lambda contact: contact.getAttr('name').split(' ')
+
 		self.contacts.sort(key=contactAttr,reverse=isDescending)
+
 
 	def addContact(self,name='',phone='',address='',zipcode=''):
 		""" adds new contact instance to contact list """
