@@ -3,8 +3,8 @@ class Contact(object):
 		self.name = name
 		self.phone = phone
 		self.zipcode = zipcode
-		self.address = address
-		self.attrs = {'name':self.name,'phone':self.phone,'zip':self.zipcode,'address':self.address}
+		self.address = address  
+		self.attrs = {'name':self.name,'phone':self.phone,'zipcode':self.zipcode,'address':self.address}
 
 	def getAttr(self,attr):
 		"""We can use this to sort the contacts by attribute """
@@ -21,3 +21,6 @@ class Contact(object):
 
 	def setAddress(self,address):
 		self.address = address
+
+	def getLabel(self):
+		pass

@@ -26,15 +26,13 @@ class AddressBook(object):
 		for index in selected:
 			del self.contacts[index]
 
+
 	def setTSVfile(self,filepath):
 		self.tsvfile = filepath
 
-
-
-
 	def loadTSV(self, filepath):
 		tsv = open(filepath,'r')
-		reader = csv.DictReader(tsv,delimiter='\t')
+		reader = csv.DictReader(tsv,delimiter='\t',restval='')
 		for row in reader:
 			contact = Contact(row['name'],row['phone'], row['address'], row['zip'])
 			self.contacts.append(contact)
