@@ -81,11 +81,13 @@ class GUI(wx.Frame):
         for contact in self.addressBook.contacts:
             self.show_contact(contact)
 
+
     def show_contact(self, contact):
         index = self.list.InsertStringItem(sys.maxint, contact.getAttr('name'))
         self.list.SetStringItem(index, 1, contact.getAttr('phone'))
         self.list.SetStringItem(index, 2, contact.getAttr('address'))
         self.list.SetStringItem(index, 3, contact.getAttr('zipcode'))
+
 
     def on_add(self, event):
         cb = ContactBox(self, "add")

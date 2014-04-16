@@ -6,7 +6,7 @@ class AddressBook(object):
 	def __init__(self):
 		self.contacts = []  ##holds contact objects
 		self.changed = False
-		self.sortMethod=('none',True)
+		self.sortMethod=('name',False)
 
 	def sort(self,attr,isDescending=False):
 		contactAttr = lambda contact: contact.getAttr(attr)
