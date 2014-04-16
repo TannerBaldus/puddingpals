@@ -1,3 +1,5 @@
+import csv
+
 class Validator(object):
 	def __init__(self):
 		pass
@@ -10,6 +12,9 @@ class Validator(object):
 		if len(phone) in range(7,17): ##limit on len http://goo.gl/8jyLcS
 
 
-	def isValidTSV(self,tsv):
+	def isValidTSV(self,filein):
+		reader = csv.DictReader(filein)
 		fieldnames = ['name','phone','address','zip']
+		line = reader[0]
+		try
 			
