@@ -1,3 +1,3 @@
-name	zipcode	address	phone
-Tanner Baldus	97401	551 W 13th Eugene,OR	985.377.9285
-Dean Baldus	70471	509 Mayhaw Branch	985.626.1110
+Last	Delivery	Second	Recipient	Phone
+Eugene OR 97401	551 W 13th		Tanner Baldus	985.377.9285
+Mandeville LA 70471	509 Mayhaw Branch Dr		Dean Baldus	985.626.1110

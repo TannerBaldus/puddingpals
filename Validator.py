@@ -1,10 +1,12 @@
 import csv
-
 class Validator(object):
 	def __init__(self):
 		pass
+
+
 	def sanitize(self,string):
 		string.replace('\t','    ')
+
 
 	def isValidPhone(self,rawphone):
 		exclude = set(string.punctuation)
@@ -14,7 +16,11 @@ class Validator(object):
 
 	def isValidTSV(self,filein):
 		reader = csv.DictReader(filein)
-		fieldnames = ['name','phone','address','zip']
-		line = reader[0]
-		try
+		row = reader.next()
+		fields = ['name']
+		return all(field in row.keys for field in fields )
+
+
+
+		
 			
