@@ -1,25 +1,35 @@
 import csv
 import unittest
+from string import punctuation
 from Contact import Contact
+from FileHandler import FileHandler
 
 class AddressBook(object):
+
+
 	def __init__(self):
 		self.contacts = []  ##holds contact objects
 		self.changed = False
 		self.sortMethod=('none',True)
+		self.FileHandler = FileHandler()
+
 
 	def sort(self,attr,isDescending=False):
-		contactAttr = lambda contact: contact.getAttr(attr)
+		contactAttr = lambda contact: contact.getAttr(attr).translate(None,punctuation)
 
 		if attr=='name':
-			contactAttr = lambda contact: contact.getAttr('name').split(' ')
+
+			contactAttr = lambda contact: contact.getAttr(attr).split(' ')[::-1] ##puts last name first in split list
 
 		self.contacts.sort(key=contactAttr,reverse=isDescending)
 
 
-	def addContact(self,name='',phone='',address='',zipcode=''):
+	def addContact(self,**attrs):
 		""" adds new contact instance to contact list """
-		self.contacts.append(Contact(name, phone, address, zipcode))
+		contact = Contact(**attrs)
+		self.contacts.append(contact)
+
+
 
 	def removeSelected(self,selected):
 		"""remove contact list from self.contacts """
@@ -35,14 +45,14 @@ class AddressBook(object):
 		tsv = open(filepath,'r')
 		reader = csv.DictReader(tsv,delimiter='\t',restval='')
 		for row in reader:
-			contact = Contact(row['name'],row['phone'], row['address'], row['zipcode'])
+			contact = Contact(**self.FileHandler.readUSPS(row))
 			self.contacts.append(contact)
 
 
 	def writeTSV(self, filepath):
 		tsv = open(filepath,'w')
-		fieldnames = ['name','phone','address','zipcode']
-		writer = csv.DictWriter(tsv, delimiter='\t', fieldnames=fieldnames)
-		writer.writerow(dict((fn,fn) for fn in fieldnames))
+		writer = csv.DictWriter(tsv, delimiter='\t', fieldnames=self.FileHandler.uspsFields)
+		writer.writeheader()
 		for contact in self.contacts:
-			writer.writerow(contact.attrs)
+			self.FileHandler.writeUSPS(contact,writer)
+			
