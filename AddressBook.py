@@ -13,7 +13,6 @@ class AddressBook(object):
 		self.sortMethod=('none',True)
 		self.FileHandler = FileHandler()
 
-
 	def sort(self,attr,isDescending=False):
 		contactAttr = lambda contact: contact.getAttr(attr).translate(None,punctuation)
 
