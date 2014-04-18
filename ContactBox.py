@@ -1,8 +1,9 @@
 from Gui import *
 
 class ContactBox(wx.Frame):
-    def __init__(self, gui, mode, name='', phone='', address='', zip='', index=0):
-        wx.Frame.__init__(self, None, -1, "Contact Information", pos=wx.Point(100,100))
+    def __init__(self, gui, mode, name='', phone='', address='', address2='', city='', state='', zipcode='', index=0):
+        wx.Frame.__init__(self, None, -1, "Contact Information", pos=wx.Point(100,150))
+        self.states = ["","AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","PR","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"]
         self.gui = gui
         self.mode = mode
         self.index = index
@@ -10,7 +11,10 @@ class ContactBox(wx.Frame):
         self.nameBox.SetValue(name)
         self.phoneBox.SetValue(phone)
         self.addressBox.SetValue(address)
-        self.zipBox.SetValue(zip)
+        self.address2Box.SetValue(address2)
+        self.cityBox.SetValue(city)
+        self.stateBox.SetValue(self.states[self.states.index(state)])
+        self.zipBox.SetValue(zipcode)
 
 
     def create_main_panel(self):
@@ -18,11 +22,17 @@ class ContactBox(wx.Frame):
 
         ##### User Controls
         self.nameLabel = wx.StaticText(self.panel, -1, "Name: ")
-        self.nameBox = wx.TextCtrl(self.panel, size=(125,-1))
+        self.nameBox = wx.TextCtrl(self.panel, size=(200,-1))
         self.phoneLabel = wx.StaticText(self.panel, -1, "Phone: ")
-        self.phoneBox = wx.TextCtrl(self.panel, size=(125,-1))
+        self.phoneBox = wx.TextCtrl(self.panel, size=(200,-1))
         self.addressLabel = wx.StaticText(self.panel, -1, "Address: ")
-        self.addressBox = wx.TextCtrl(self.panel, size=(250,-1))
+        self.addressBox = wx.TextCtrl(self.panel, size=(200,-1))
+        self.address2Label = wx.StaticText(self.panel, -1, "Address, cont.: ")
+        self.address2Box = wx.TextCtrl(self.panel, size=(200,-1))
+        self.cityLabel = wx.StaticText(self.panel, -1, "City: ")
+        self.cityBox = wx.TextCtrl(self.panel, size=(200,-1))
+        self.stateLabel = wx.StaticText(self.panel, -1, "State: ")
+        self.stateBox = wx.ComboBox(self.panel, value=self.states[0], choices=self.states)
         self.zipLabel = wx.StaticText(self.panel, -1, "Zip: ")
         self.zipBox = wx.TextCtrl(self.panel, size=(100,-1))
         self.addButton = wx.Button(self.panel, -1, "Save")
@@ -35,15 +45,21 @@ class ContactBox(wx.Frame):
         self.info = wx.BoxSizer(wx.HORIZONTAL)
 
         self.labels = wx.BoxSizer(wx.VERTICAL)
-        self.labels.Add(self.nameLabel, 1, border=5, flag=wx.ALL)
-        self.labels.Add(self.phoneLabel, 1, border=5, flag=wx.ALL)
-        self.labels.Add(self.addressLabel, 1, border=5, flag=wx.ALL)
-        self.labels.Add(self.zipLabel, 1, border=5, flag=wx.ALL)
+        self.labels.Add(self.nameLabel, 1, border=8, flag=wx.ALL)
+        self.labels.Add(self.phoneLabel, 1, border=7, flag=wx.ALL)
+        self.labels.Add(self.addressLabel, 1, border=7, flag=wx.ALL)
+        self.labels.Add(self.address2Label, 1, border=7, flag=wx.ALL)
+        self.labels.Add(self.cityLabel, 1, border=7, flag=wx.ALL)
+        self.labels.Add(self.stateLabel, 1, border=7, flag=wx.ALL)
+        self.labels.Add(self.zipLabel, 1, border=7, flag=wx.ALL)
 
         self.boxes = wx.BoxSizer(wx.VERTICAL)
-        self.boxes.Add(self.nameBox, 1, border=3, flag=wx.ALL)
+        self.boxes.Add(self.nameBox, 1, border=5, flag=wx.ALL)
         self.boxes.Add(self.phoneBox, 1, border=3, flag=wx.ALL)
         self.boxes.Add(self.addressBox, 1, border=3, flag=wx.ALL)
+        self.boxes.Add(self.address2Box, 1, border=3, flag=wx.ALL)
+        self.boxes.Add(self.cityBox, 1, border=3, flag=wx.ALL)
+        self.boxes.Add(self.stateBox, 1, border=3, flag=wx.ALL)
         self.boxes.Add(self.zipBox, 1, border=3, flag=wx.ALL)
 
         flags = wx.ALIGN_LEFT | wx.ALL
@@ -59,19 +75,24 @@ class ContactBox(wx.Frame):
 
         self.panel.SetSizer(self.window)
         self.window.Fit(self)
-        self.SetSize(wx.Size(325,180))
+        self.SetSize(wx.Size(300,300))
+        self.SetMinSize(wx.Size(300,300))
+        self.SetMaxSize(wx.Size(300,300))
 
 
     def on_add(self, event):
-        self.name = self.nameBox.GetValue()
-        self.address = self.addressBox.GetValue()
-        self.zip = self.zipBox.GetValue()
-        self.phone = self.phoneBox.GetValue()
+        self.name = str(self.nameBox.GetValue())
+        self.phone = str(self.phoneBox.GetValue())
+        self.address = str(self.addressBox.GetValue())
+        self.address2 = str(self.address2Box.GetValue())
+        self.city = str(self.cityBox.GetValue())
+        self.state = str(self.stateBox.GetValue())
+        self.zipcode = str(self.zipBox.GetValue())
         #valid = self.gui.addressBook.validate(self.name,self.address,self.zip,self.phone)
         valid = True
         if valid:
             if self.mode == "add":
-                self.gui.addressBook.addContact(self.name, self.phone, self.address, self.zip)
+                self.gui.addressBook.addContact(**{"name": self.name, "phone": self.phone, "address": self.address, "address2": self.address2, "city": self.city, "state": self.state, "zipcode": self.zipcode})
                 self.gui.addressBook.sort(self.gui.addressBook.sortMethod[0],self.gui.addressBook.sortMethod[1])
                 self.gui.display()
                 self.gui.flash_status_message("Added {}".format(str(self.name)))
@@ -79,7 +100,7 @@ class ContactBox(wx.Frame):
                 self.Destroy()
             if self.mode == "edit":
                 del self.gui.addressBook.contacts[self.index]
-                self.gui.addressBook.addContact(self.name, self.phone, self.address, self.zip)
+                self.gui.addressBook.addContact(**{"name": self.name, "phone": self.phone, "address": self.address, "address2": self.address2, "city": self.city, "state": self.state, "zipcode": self.zipcode})
                 self.gui.addressBook.sort(self.gui.addressBook.sortMethod[0],self.gui.addressBook.sortMethod[1])
                 self.gui.display()
                 self.gui.flash_status_message("Edited {}".format(str(self.name)))
@@ -88,9 +109,3 @@ class ContactBox(wx.Frame):
 
     def on_cancel(self, event):
         self.Destroy()
-
-if __name__ == "__main__":
-    app = wx.App()
-    app.frame = ContactBox('foo')
-    app.frame.Show()
-    app.MainLoop()
