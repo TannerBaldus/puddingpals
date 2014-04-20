@@ -1,8 +1,9 @@
 from Gui import *
+from Validator import Validator
 
 class ContactBox(wx.Frame):
     def __init__(self, gui, mode, name='', phone='', address='', address2='', city='', state='', zipcode='', index=0):
-        wx.Frame.__init__(self, None, -1, "Contact Information", pos=wx.Point(100,150))
+        wx.Frame.__init__(self, None, -1, "Contact Information", pos=wx.Point(50,120))
         self.states = ["","AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","PR","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"]
         self.gui = gui
         self.mode = mode
@@ -32,7 +33,7 @@ class ContactBox(wx.Frame):
         self.cityLabel = wx.StaticText(self.panel, -1, "City: ")
         self.cityBox = wx.TextCtrl(self.panel, size=(200,-1))
         self.stateLabel = wx.StaticText(self.panel, -1, "State: ")
-        self.stateBox = wx.ComboBox(self.panel, value=self.states[0], choices=self.states)
+        self.stateBox = wx.ComboBox(self.panel, value=self.states[0], choices=self.states, style=wx.CB_READONLY)
         self.zipLabel = wx.StaticText(self.panel, -1, "Zip: ")
         self.zipBox = wx.TextCtrl(self.panel, size=(100,-1))
         self.addButton = wx.Button(self.panel, -1, "Save")
@@ -62,9 +63,26 @@ class ContactBox(wx.Frame):
         self.boxes.Add(self.stateBox, 1, border=3, flag=wx.ALL)
         self.boxes.Add(self.zipBox, 1, border=3, flag=wx.ALL)
 
+        self.errors = wx.BoxSizer(wx.VERTICAL)
+        self.nameError = wx.StaticText(self.panel, -1, "")
+        self.phoneError = wx.StaticText(self.panel, -1, "")
+        self.addressError = wx.StaticText(self.panel, -1, "")
+        self.address2Error = wx.StaticText(self.panel, -1, "")
+        self.cityError = wx.StaticText(self.panel, -1, "")
+        self.stateError = wx.StaticText(self.panel, -1, "")
+        self.zipError = wx.StaticText(self.panel, -1, "")
+        self.errors.Add(self.nameError, 1, border=8, flag=wx.ALL)
+        self.errors.Add(self.phoneError, 1, border=7, flag=wx.ALL)
+        self.errors.Add(self.addressError, 1, border=7, flag=wx.ALL)
+        self.errors.Add(self.address2Error, 1, border=7, flag=wx.ALL)
+        self.errors.Add(self.cityError, 1, border=7, flag=wx.ALL)
+        self.errors.Add(self.stateError, 1, border=7, flag=wx.ALL)
+        self.errors.Add(self.zipError, 1, border=7, flag=wx.ALL)
+
         flags = wx.ALIGN_LEFT | wx.ALL
         self.info.Add(self.labels, 1, flag=flags)
         self.info.Add(self.boxes, 1, flag=flags)
+        self.info.Add(self.errors, 1, flag=flags)
 
         self.buttons = wx.BoxSizer(wx.HORIZONTAL)
         self.buttons.Add(self.addButton, 1, border=3, flag=wx.ALL)
@@ -75,9 +93,9 @@ class ContactBox(wx.Frame):
 
         self.panel.SetSizer(self.window)
         self.window.Fit(self)
-        self.SetSize(wx.Size(300,300))
-        self.SetMinSize(wx.Size(300,300))
-        self.SetMaxSize(wx.Size(300,300))
+        self.SetSize(wx.Size(700,300))
+        self.SetMinSize(wx.Size(700,300))
+        self.SetMaxSize(wx.Size(700,300))
 
 
     def on_add(self, event):
@@ -88,9 +106,12 @@ class ContactBox(wx.Frame):
         self.city = str(self.cityBox.GetValue())
         self.state = str(self.stateBox.GetValue())
         self.zipcode = str(self.zipBox.GetValue())
-        #valid = self.gui.addressBook.validate(self.name,self.address,self.zip,self.phone)
-        valid = True
-        if valid:
+        if Validator.validName(self.name) and \
+           Validator.validPhone(self.phone) and \
+           Validator.validAddress(self.address) and \
+           Validator.validCity(self.city) and \
+           Validator.validState(self.state) and \
+           Validator.validZip(self.zipcode):
             if self.mode == "add":
                 self.gui.addressBook.addContact(**{"name": self.name, "phone": self.phone, "address": self.address, "address2": self.address2, "city": self.city, "state": self.state, "zipcode": self.zipcode})
                 self.gui.addressBook.sort(self.gui.addressBook.sortMethod[0],self.gui.addressBook.sortMethod[1])
@@ -106,6 +127,29 @@ class ContactBox(wx.Frame):
                 self.gui.flash_status_message("Edited {}".format(str(self.name)))
                 self.gui.addressBook.changed = True
                 self.Destroy()
+        else:
+            self.nameError.SetLabel("")
+            self.phoneError.SetLabel("")
+            self.addressError.SetLabel("")
+            self.address2Error.SetLabel("")
+            self.cityError.SetLabel("")
+            self.stateError.SetLabel("")
+            self.zipError.SetLabel("")
+            if not Validator.validName(self.name):
+                self.nameError.SetLabel("Cannot be blank")
+            if not Validator.validPhone(self.phone):
+                self.phoneError.SetLabel("Invalid phone number")
+            if not Validator.validAddress(self.address):
+                self.addressError.SetLabel("Invalid Address")
+            if not Validator.validAddress(self.address2):
+                self.address2Error.SetLabel("Invalid Address")
+            if not Validator.validCity(self.city):
+                self.cityError.SetLabel("Invalid City")
+            if not Validator.validState(self.state):
+                self.stateError.SetLabel("Invalid State")
+            if not Validator.validZip(self.zipcode):
+                self.zipError.SetLabel("Must be ##### or #####-####")
+
 
     def on_cancel(self, event):
         self.Destroy()

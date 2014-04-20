@@ -17,6 +17,7 @@ class GUI(wx.Frame):
         ##### Menu Bar
         self.Bind(wx.EVT_CLOSE, self.on_exit, self)
         self.menubar = wx.MenuBar()
+
         menu_file = wx.Menu()
         m_open = menu_file.Append(-1, "&New", "New Address Book")
         self.Bind(wx.EVT_MENU, self.on_new, m_open)
@@ -32,10 +33,22 @@ class GUI(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_export, m_export)
         m_exit = menu_file.Append(-1, "&Exit", "Exit Program")
         self.Bind(wx.EVT_MENU, self.on_exit, m_exit)
+
+        menu_contact = wx.Menu()
+        m_add = menu_contact.Append(-1, "&Add New Contact", "Add New Contact to Address Book")
+        self.Bind(wx.EVT_MENU, self.on_add, m_add)
+        m_edit = menu_contact.Append(-1, "&Edit Selected", "Edit Selected Contact")
+        self.Bind(wx.EVT_MENU, self.on_edit, m_edit)
+        m_remove = menu_contact.Append(-1, "&Remove Selected", "Remove Selected Contact from Address Book")
+        self.Bind(wx.EVT_MENU, self.on_remove, m_remove)
+        m_print = menu_contact.Append(-1, "Get Mailing Label", "Get Mailing Label for Selected Contact")
+        self.Bind(wx.EVT_MENU, self.on_print, m_print)
+
         menu_help = wx.Menu()
-        m_about = menu_help.Append(-1, "&About\tF1", "About this application")
+        m_about = menu_help.Append(-1, "&About", "About this application")
         self.Bind(wx.EVT_MENU, self.on_about, m_about)
         self.menubar.Append(menu_file, "&File")
+        self.menubar.Append(menu_contact, "&Contact")
         self.menubar.Append(menu_help, "&Help")
         self.SetMenuBar(self.menubar)
         self.statusbar = self.CreateStatusBar()
@@ -62,6 +75,8 @@ class GUI(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.on_remove, self.removeButton)
         self.editButton = wx.Button(self.panel, -1, "Edit", size=wx.Size(80,20))
         self.Bind(wx.EVT_BUTTON, self.on_edit, self.editButton)
+        self.printButton = wx.Button(self.panel, -1, "Mail Label", size=wx.Size(80,20))
+        self.Bind(wx.EVT_BUTTON, self.on_print, self.printButton)
         self.sortName = wx.Button(self.panel, -1, u"Sort by Name \u25B2", size=wx.Size(120,20))
         self.Bind(wx.EVT_BUTTON, self.on_sort_name, self.sortName)
         self.sortZip = wx.Button(self.panel, -1, u"Sort by Zip", size=wx.Size(120,20))
@@ -74,6 +89,7 @@ class GUI(wx.Frame):
         self.hbox.Add(self.addButton, 0, border=5, flag=flags)
         self.hbox.Add(self.editButton, 0, border=5, flag=flags)
         self.hbox.Add(self.removeButton, 0, border=5, flag=flags)
+        self.hbox.Add(self.printButton, 0, border=5, flag=flags)
         self.hbox.AddStretchSpacer()
         self.hbox.Add(self.sortName, 0, border=5, flag=wx.ALIGN_RIGHT | wx.ALL | wx.ALIGN_CENTER_VERTICAL)
         self.hbox.Add(self.sortZip, 0, border=5, flag=wx.ALIGN_RIGHT | wx.ALL | wx.ALIGN_CENTER_VERTICAL)
@@ -237,11 +253,22 @@ class GUI(wx.Frame):
 
     def on_save(self, event):
         if self.saveName == "":
-            self.on_save_as()
+            self.on_save_as(mode=0)
         else:
             self.addressBook.writeTSV(self.saveName)
             self.addressBook.changed = False
             self.flash_status_message("Saved address book {}".format(self.saveName))
+
+
+    def on_print(self, event):
+        if len(self.addressBook.contacts)>0:
+            i = self.list.GetFirstSelected()
+            mail = self.addressBook.contacts[i].getLabel()
+            dlg = wx.MessageDialog(self, mail, "USPS Mailing Label", wx.OK)
+            dlg.ShowModal()
+            dlg.Destroy()
+        else:
+            self.flash_status_message("Address book is empty")
 
 
     def on_exit(self, event):
