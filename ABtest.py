@@ -11,13 +11,16 @@ class ABTest(unittest.TestCase):
 
 
 		
-	def testSort(self):
+	def testSortName(self):
 		names = ['Bane A','Adam C', 'Charles C']
 		ab = AddressBook()
 		self.fillAb(ab)
 		ab.sort('name',False)
 		abNames = [contact.getAttr('name') for contact in ab.contacts]
 		self.assertEqual(names,abNames)
+
+	def testSortZip(self):
+		zips = ['1']
 
 
 

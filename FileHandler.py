@@ -13,10 +13,16 @@ class FileHandler(object):
 		attributes['address'] = row['Delivery']
 		attributes['address2'] = row['Second']
 		attributes['city'] = last[0]
-		attributes['state'] = last[1]
+		attributes['state'] = self.stateCode(last[1])
 		attributes['zipcode'] = last[2]
 		zipcode = last[2]
 		return attributes
+
+
+	def stateCode(self state):
+		if len(state) => 2:
+			return state[0:1].upper()
+
 
 	def writeUSPS(self,contact,dictwriter):
 		attributes ={}

@@ -40,4 +40,4 @@ class Contact(object):
 		self.attrs['state'] = state
 
 	def getLabel(self):
-		pass
+		.if 
