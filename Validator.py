@@ -1,59 +1,70 @@
 import csv
 import re
-from FileHandler import FileHandler
+import os.path
 from string import punctuation
 
 
 class Validator(object):
 	def __init__(self):
-		fh = FileHandler()
-		self.usps =  fh.uspsFields
+		pass
 
-
-	def sanitize(self,string):
+	@staticmethod
+	def sanitize(string):
 		exclude = {'\t':'    ','\n':''}
 		for ch in exclude:
 			string = string.replace(ch,exclude[ch])
 		return string
 
-	# def isvalidPunct(self,ch,validPunct):
-	# 	"""Helper function that checks if the punctuation is acceptable """
-	# 	if ch in punctuation and not in validPunct:
-	# 		return False
-	# 	return True
+	@staticmethod
+	def isValidPhone(rawphone):
+		phone = rawphone.translate(None,punctuation)
+		if len(phone) < 7: return False
+		return True
 
-
-	def isUSPhone(self,rawphone):
-		phone = ''
-		for ch in rawphone:
-			if ch.isdigit():
-				phone += ch
-		if len(phone) in range(7,12): return True
-		return False
-
-
+	@staticmethod
 	def isValidUSPS(self,filein):
 		reader = csv.DictReader(filein)
 		row = reader.next()
-		fields = uspsFields
-		return all(field in row.keys for field in fields)
-
-	def isValidZip(self,zip):
-		return re.match(r'9([0-2]|3[0-5]).+', zipcode)
+		return all(field in row for field in self.uspsFields)
 
 
-	def isValidState(self,state):
+	@staticmethod
+	def isValidZip(zipcode):
+		 if re.match("^\\d{5}(-\\d{4})?$",zipcode): return True
+		 return False
+
+	@staticmethod
+	def isValidCity(city):
+		"""Always Return True for now but might want to expand later"""
+		return True
+
+
+
+
+	@staticmethod
+	def isValidState(state):
 		"""
-		Returns State Code if a valid full name or Code
-		otherwise returns false
 
 		"""
 		if state.isalpha():
 			return True
 		return False 
 
-	def isValidLabel(self,contact):
-		if 
+	@staticmethod
+	def isValidName(state):
+		return True
+
+
+	@staticmethod
+	def isValidUSPS(filein):
+		if os.path.isfile(filein) and filein.endswith('.tsv') :
+			fields = ['Last','Delivery','Second','Recipient','Phone']
+			reader = csv.DictReader(filein)
+			row = reader.next()
+			return all(field in row.keys for field in fields)
+		
+		return False
+
 
 
 
@@ -61,9 +72,3 @@ if __name__ == '__main__':
 	v = Validator()
 	x = 'Hello \t Roger \n Rabbit'
 	v.sanitize(x)
-
-
-
-
-		
-			
