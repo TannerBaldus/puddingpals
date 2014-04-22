@@ -54,7 +54,7 @@ class Validator(object):
         return True
 
     def isValidState(self,state):
-        if state in self.states:
+        if state in self.states or state=='':
             return True
         return False 
 
