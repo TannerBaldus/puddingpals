@@ -42,11 +42,14 @@ class Contact(object):
 
     def getLabel(self):
 
-        if Validator.isValidName(self.getAttr('name')) and 
-           Validator.isValidAddress(self.getAttr('address')) and 
-           Validator.isValidCity(self.getAttr('city')) and 
-           Validator.isValidState(self.getAttr('state')) and 
-           Validator.isValidZip(self.getAttr('zipcode')):
+        if Validator.isValidName(self.getAttr('name')) and \
+           self.getAttr('address') != "" and \
+           Validator.isValidCity(self.getAttr('city')) and \
+           self.getAttr('city') != "" and \
+           Validator.isValidState(self.getAttr('state')) and \
+           self.getAttr('state') != "" and \
+           Validator.isValidZip(self.getAttr('zipcode')) and \
+           self.getAttr('zipcode') != "":
             mail = ""
             if self.getAttr('name') != "":
                 mail += "{}\n".format(self.getAttr('name'))

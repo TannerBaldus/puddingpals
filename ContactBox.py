@@ -1,5 +1,4 @@
 from Gui import *
-from Validator import Validator
 
 class ContactBox(wx.Frame):
     def __init__(self, gui, mode, name='', phone='', address='', address2='', city='', state='', zipcode='', index=0):
@@ -106,9 +105,8 @@ class ContactBox(wx.Frame):
         self.city = str(self.cityBox.GetValue())
         self.state = str(self.stateBox.GetValue())
         self.zipcode = str(self.zipBox.GetValue())
-        if Validator.validName(self.name) and \
+        if Validator.isValidName(self.name) and \
            Validator.isValidPhone(self.phone) and \
-           Validator.validAddress(self.address) and \
            Validator.isValidCity(self.city) and \
            Validator.isValidState(self.state) and \
            Validator.isValidZip(self.zipcode):
@@ -135,14 +133,14 @@ class ContactBox(wx.Frame):
             self.cityError.SetLabel("")
             self.stateError.SetLabel("")
             self.zipError.SetLabel("")
-            if not Validator.validName(self.name):
+            if not Validator.isValidName(self.name):
                 self.nameError.SetLabel("Cannot be blank")
             if not Validator.isValidPhone(self.phone):
                 self.phoneError.SetLabel("Invalid phone number")
-            if not Validator.validAddress(self.address):
-                self.addressError.SetLabel("Invalid Address")
-            if not Validator.validAddress(self.address2):
-                self.address2Error.SetLabel("Invalid Address")
+            #if not Validator.validAddress(self.address):
+            #    self.addressError.SetLabel("Invalid Address")
+            #if not Validator.validAddress(self.address2):
+            #    self.address2Error.SetLabel("Invalid Address")
             if not Validator.isValidCity(self.city):
                 self.cityError.SetLabel("Invalid City")
             if not Validator.isValidState(self.state):
