@@ -65,6 +65,7 @@ class FileHandler(object):
 			attributes ={}
 			attributes['Recipient'] = contact.getAttr('name')
 			last = [contact.getAttr('city'),contact.getAttr('state'),contact.getAttr('zipcode')]
+			attributes['Second'] = contact.getAttr('address2')
 			attributes['Last'] = ' '.join(last)
 			attributes['Delivery'] = contact.getAttr('address2')
 			attributes['Phone'] = contact.getAttr('phone')
