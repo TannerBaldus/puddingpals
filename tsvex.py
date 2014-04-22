@@ -1,5 +1,5 @@
 import csv
-filein = open('bad.tsv')
+filein = open('testTSV/badformat.tsv')
 reader = csv.DictReader(filein,delimiter='\t')
-row = reader.next()
-print row.keys()
+for row in reader:
+	print row

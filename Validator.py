@@ -6,64 +6,78 @@ from string import punctuation
 
 class Validator(object):
 	def __init__(self):
-		pass
+		self.uspsFields = ['Last','Delivery','Second','Recipient','Phone']
+		self.validateMethods={
+			'phone': lambda phone: self.isValidPhone(phone),
+			'city': lambda city: self.isValidCity(city),
+			'state': lambda state: self.isValidState(state),
+			'zipcode': lambda zipcode: self.isValidZip(zipcode),
+			'name': lambda name: self.isValidName(name),
 
-	@staticmethod
-	def sanitize(string):
+		}
+		self.states= ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", 
+          "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
+          "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+          "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+          "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
+
+
+
+
+
+
+
+	def validateAttr(self,attrName,attr):
+		return self.validateMethods[attrName](attr)
+
+
+
+	def sanitize(self, string):
 		exclude = {'\t':'    ','\n':''}
 		for ch in exclude:
 			string = string.replace(ch,exclude[ch])
 		return string
 
-	@staticmethod
-	def isValidPhone(rawphone):
+
+	def isValidPhone(self, rawphone):
 		phone = rawphone.translate(None,punctuation)
 		if len(phone) < 7: return False
 		return True
 
-	@staticmethod
 	def isValidUSPS(self,filein):
 		reader = csv.DictReader(filein)
 		row = reader.next()
 		return all(field in row for field in self.uspsFields)
 
 
-	@staticmethod
-	def isValidZip(zipcode):
-		 if re.match("^\\d{5}(-\\d{4})?$",zipcode): return True
-		 return False
+	def isValidZip(self,zipcode):
+		if re.match("^\\d{5}(-\\d{4})?$",zipcode): return True
+		return False
 
-	@staticmethod
-	def isValidCity(city):
+	def isValidCity(self,city):
 		"""Always Return True for now but might want to expand later"""
 		return True
 
-
-
-
-	@staticmethod
-	def isValidState(state):
-		"""
-
-		"""
-		if state.isalpha():
+	def isValidState(self,state):
+		if state in self.states:
 			return True
 		return False 
 
-	@staticmethod
-	def isValidName(state):
+	def isValidName(self,state):
 		return True
 
 
-	@staticmethod
-	def isValidUSPS(filein):
+	def isValidUSPS(self,filein):
 		if os.path.isfile(filein) and filein.endswith('.tsv') :
-			fields = ['Last','Delivery','Second','Recipient','Phone']
+			fields = self.uspsFields
 			reader = csv.DictReader(filein)
 			row = reader.next()
 			return all(field in row.keys for field in fields)
 		
 		return False
+
+
+
 
 
 

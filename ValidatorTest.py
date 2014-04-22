@@ -29,7 +29,13 @@ class ValidatorTest(unittest.TestCase):
 		self.assertTrue(Validator.isValidPhone(phone))
 
 	def  testDNETSV(self):
+		"""tests if validator rejects files that don't exist"""
 		filein = 'blah.tsv'
+		self.assertFalse(Validator.isValidUSPS(filein))
+
+		
+	def testNonTSV(self):
+		filein = 'testTSV/test.csv'
 		self.assertFalse(Validator.isValidUSPS(filein))
 		
 	

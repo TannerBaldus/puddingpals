@@ -1,9 +1,9 @@
-from Validator import *
 
 class Contact(object):
 
     def __init__(self,**attributes):
         self.attrs = attributes
+        self.labelFields = ['address','name','zipcode','city','state']
 
 
     def getAttr(self,attr):
@@ -40,21 +40,18 @@ class Contact(object):
         self.state = state
         self.attrs['state'] = state
 
-    def getLabel(self):
+    def getLabel(self): 
 
-        if Validator.isValidName(self.getAttr('name')) and 
-           Validator.isValidAddress(self.getAttr('address')) and 
-           Validator.isValidCity(self.getAttr('city')) and 
-           Validator.isValidState(self.getAttr('state')) and 
-           Validator.isValidZip(self.getAttr('zipcode')):
+
+        if all(self.getAttr(field) for field in self.labelFields):
             mail = ""
-            if self.getAttr('name') != "":
-                mail += "{}\n".format(self.getAttr('name'))
+            mail += "{}\n".format(self.getAttr('name'))
             mail += "{}\n".format(self.getAttr('address'))
             if self.getAttr('address2') != "":
                 mail += "{}\n".format(self.getAttr('address2'))
             mail += "{}, {} {}".format(self.getAttr('city'),self.getAttr('state'),self.getAttr('zipcode'))
         else:
             mail = "Insufficient information to produce mailing label. Please edit contact and try again."
+
         return mail
 

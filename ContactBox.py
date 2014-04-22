@@ -16,6 +16,7 @@ class ContactBox(wx.Frame):
         self.cityBox.SetValue(city)
         self.stateBox.SetValue(self.states[self.states.index(state)])
         self.zipBox.SetValue(zipcode)
+        self.Validator = Validator()
 
 
     def create_main_panel(self):
@@ -106,12 +107,12 @@ class ContactBox(wx.Frame):
         self.city = str(self.cityBox.GetValue())
         self.state = str(self.stateBox.GetValue())
         self.zipcode = str(self.zipBox.GetValue())
-        if Validator.validName(self.name) and \
-           Validator.isValidPhone(self.phone) and \
-           Validator.validAddress(self.address) and \
-           Validator.isValidCity(self.city) and \
-           Validator.isValidState(self.state) and \
-           Validator.isValidZip(self.zipcode):
+        if self.Validator.validName(self.name) and \
+           self.Validator.isValidPhone(self.phone) and \
+           self.Validator.validAddress(self.address) and \
+           self.Validator.isValidCity(self.city) and \
+           self.Validator.isValidState(self.state) and \
+           self.Validator.isValidZip(self.zipcode):
             if self.mode == "add":
                 self.gui.addressBook.addContact(**{"name": self.name, "phone": self.phone, "address": self.address, "address2": self.address2, "city": self.city, "state": self.state, "zipcode": self.zipcode})
                 self.gui.addressBook.sort(self.gui.addressBook.sortMethod[0],self.gui.addressBook.sortMethod[1])
@@ -135,19 +136,19 @@ class ContactBox(wx.Frame):
             self.cityError.SetLabel("")
             self.stateError.SetLabel("")
             self.zipError.SetLabel("")
-            if not Validator.validName(self.name):
+            if not self.Validator.validName(self.name):
                 self.nameError.SetLabel("Cannot be blank")
-            if not Validator.isValidPhone(self.phone):
+            if not self.Validator.isValidPhone(self.phone):
                 self.phoneError.SetLabel("Invalid phone number")
-            if not Validator.validAddress(self.address):
+            if not self.Validator.validAddress(self.address):
                 self.addressError.SetLabel("Invalid Address")
-            if not Validator.validAddress(self.address2):
+            if not self.Validator.validAddress(self.address2):
                 self.address2Error.SetLabel("Invalid Address")
-            if not Validator.isValidCity(self.city):
+            if not self.Validator.isValidCity(self.city):
                 self.cityError.SetLabel("Invalid City")
-            if not Validator.isValidState(self.state):
+            if not self.Validator.isValidState(self.state):
                 self.stateError.SetLabel("Invalid State")
-            if not Validator.isValidZip(self.zipcode):
+            if not self.Validator.isValidZip(self.zipcode):
                 self.zipError.SetLabel("Must be ##### or #####-####")
 
 

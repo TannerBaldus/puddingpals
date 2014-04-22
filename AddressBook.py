@@ -1,4 +1,3 @@
-import csv
 import unittest
 from string import punctuation
 from Contact import Contact
@@ -41,17 +40,12 @@ class AddressBook(object):
 
 
     def loadTSV(self, filepath):
-        tsv = open(filepath,'r')
-        reader = csv.DictReader(tsv,delimiter='\t',restval='')
-        for row in reader:
-            contact = Contact(**self.FileHandler.readUSPS(row))
-            self.contacts.append(contact)
+       fromTSV = self.FileHandler.readUSPS(filepath)
+       for attr in fromTSV :
+        self.contacts.append(Contact(**attr))
 
+            
 
     def writeTSV(self, filepath):
-        tsv = open(filepath,'w')
-        writer = csv.DictWriter(tsv, delimiter='\t', fieldnames=self.FileHandler.uspsFields)
-        writer.writeheader()
-        for contact in self.contacts:
-            self.FileHandler.writeUSPS(contact,writer)
+        self.FileHandler.writeUSPS(self.contacts,filepath)
 
