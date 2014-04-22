@@ -210,7 +210,6 @@ class GUI(wx.Frame):
         if openFileDialog.ShowModal() == wx.ID_CANCEL:
             return
         inFilePath = openFileDialog.GetPath()
-        print inFilePath
         if self.validation.isValidUSPS(inFilePath):
             newGui = GUI()
             newGui.addressBook.loadTSV(inFilePath)
@@ -237,7 +236,9 @@ class GUI(wx.Frame):
             return
         self.saveName = saveFileDialog.GetPath()
         self.addressBook.writeTSV(self.saveName)
-        self.addressBook.changed = False
+        if (mode != 2):
+            self.display()
+            self.addressBook.changed = False
         self.flash_status_message("Saved address book as {}".format(self.saveName))
 
 
@@ -262,7 +263,7 @@ class GUI(wx.Frame):
 
 
     def on_export(self, event):
-        self.on_save_as(mode=1)
+        self.on_save_as(mode=2)
 
 
     def on_save(self, event):
@@ -278,7 +279,7 @@ class GUI(wx.Frame):
         if len(self.addressBook.contacts)>0:
             i = self.list.GetFirstSelected()
             mail = self.addressBook.contacts[i].getLabel()
-            dlg = wx.MessageDialog(self, mail, "USPS Mailing Label", wx.OK)
+            dlg = MessageBox(self, mail)
             dlg.ShowModal()
             dlg.Destroy()
         else:
@@ -309,3 +310,14 @@ class GUI(wx.Frame):
         self.timeroff.Start(flash_len_ms, oneShot=True)
     def on_flash_status_off(self, event):
         self.statusbar.SetStatusText('')
+
+
+class MessageBox(wx.Dialog):
+    def __init__(self, parent, message):
+        wx.Dialog.__init__(self, parent, title="USPS Mailing Label")
+        text = wx.TextCtrl(self, style=wx.TE_READONLY|wx.BORDER_NONE)
+        text.SetValue(message)
+        text.SetBackgroundColour(wx.SystemSettings.GetColour(4))
+        self.SetSize(wx.Size(300,120))
+        self.SetMinSize(wx.Size(300,120))
+        self.SetMaxSize(wx.Size(300,120))

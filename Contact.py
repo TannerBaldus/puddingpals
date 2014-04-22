@@ -49,7 +49,7 @@ class Contact(object):
                 mail += "{}\n".format(self.getAttr('address2'))
             mail += "{}, {} {}".format(self.getAttr('city'),self.getAttr('state'),self.getAttr('zipcode'))
         else:
-            mail = "Insufficient information to produce mailing label. Please edit contact and try again."
+            mail = "Insufficient info to produce mailing label.\nPlease edit contact and try again."
 
         return mail
 
