@@ -2,6 +2,7 @@ import wx
 import sys
 from AddressBook import *
 from ContactBox import ContactBox
+from Validator import Validator
 
 class GUI(wx.Frame):
     title = "Jello Puddin' Pals"
@@ -118,6 +119,7 @@ class GUI(wx.Frame):
         self.list.SetStringItem(index, 5, contact.getAttr('state'))
         self.list.SetStringItem(index, 6, contact.getAttr('zipcode'))
 
+
     def on_add(self, event):
         cb = ContactBox(self, "add")
         cb.Show()
@@ -207,14 +209,19 @@ class GUI(wx.Frame):
         if openFileDialog.ShowModal() == wx.ID_CANCEL:
             return
         inFilePath = openFileDialog.GetPath()
-        newGui = GUI()
-        newGui.addressBook.loadTSV(inFilePath)
-        newGui.saveName = inFilePath
-        newGui.addressBook.sort('name',False)
-        newGui.display()
-        newGui.Show()
-        newGui.flash_status_message("Opened address book {}".format(newGui.saveName))
-        self.Destroy()
+        if Validator.isValidTSV(inFilePath):
+            newGui = GUI()
+            newGui.addressBook.loadTSV(inFilePath)
+            newGui.saveName = inFilePath
+            newGui.addressBook.sort('name',False)
+            newGui.display()
+            newGui.Show()
+            newGui.flash_status_message("Opened address book {}".format(newGui.saveName))
+            self.Destroy()
+        else:
+            dlg = wx.MessageDialog(self, "Unable to open {}".format(inFilePath.split('/')[len(inFilePath.split('/'))-1]), "Invalid File", wx.OK)
+            dlg.ShowModal()
+            dlg.Destroy()
 
 
     def on_save_as(self, mode):
@@ -237,14 +244,19 @@ class GUI(wx.Frame):
         if openFileDialog.ShowModal() == wx.ID_CANCEL:
             return
         inFilePath = openFileDialog.GetPath()
-        temp = AddressBook()
-        temp.loadTSV(inFilePath)
-        for contact in temp.contacts:
-            self.addressBook.contacts.append(contact)
-        self.addressBook.sort(self.addressBook.sortMethod[0],self.addressBook.sortMethod[1])
-        self.display()
-        self.flash_status_message("Imported address book {}".format(inFilePath))
-        self.addressBook.changed = True
+        if Validator.isValidTSV(inFilePath):
+            temp = AddressBook()
+            temp.loadTSV(inFilePath)
+            for contact in temp.contacts:
+                self.addressBook.contacts.append(contact)
+            self.addressBook.sort(self.addressBook.sortMethod[0],self.addressBook.sortMethod[1])
+            self.display()
+            self.flash_status_message("Imported address book {}".format(inFilePath))
+            self.addressBook.changed = True
+        else:
+            dlg = wx.MessageDialog(self, "Unable to import {}".format(inFilePath.split('/')[len(inFilePath.split('/'))-1]), "Invalid File", wx.OK)
+            dlg.ShowModal()
+            dlg.Destroy()
 
 
     def on_export(self, event):

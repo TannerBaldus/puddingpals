@@ -5,6 +5,7 @@ from string import punctuation
 
 
 class Validator(object):
+    
 	def __init__(self):
 		self.uspsFields = ['Last','Delivery','Second','Recipient','Phone']
 		self.validateMethods={
@@ -66,23 +67,7 @@ class Validator(object):
 	def isValidName(self,state):
 		return True
 
-
-	def isValidUSPS(self,filein):
-		if os.path.isfile(filein) and filein.endswith('.tsv') :
-			fields = self.uspsFields
-			reader = csv.DictReader(filein)
-			row = reader.next()
-			return all(field in row.keys for field in fields)
-		
-		return False
-
-
-
-
-
-
-
 if __name__ == '__main__':
-	v = Validator()
-	x = 'Hello \t Roger \n Rabbit'
-	v.sanitize(x)
+    v = Validator()
+    x = 'Hello \t Roger \n Rabbit'
+    v.sanitize(x)

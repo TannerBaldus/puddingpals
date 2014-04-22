@@ -41,8 +41,6 @@ class Contact(object):
         self.attrs['state'] = state
 
     def getLabel(self): 
-
-
         if all(self.getAttr(field) for field in self.labelFields):
             mail = ""
             mail += "{}\n".format(self.getAttr('name'))

@@ -107,12 +107,14 @@ class ContactBox(wx.Frame):
         self.city = str(self.cityBox.GetValue())
         self.state = str(self.stateBox.GetValue())
         self.zipcode = str(self.zipBox.GetValue())
+
         if self.Validator.validName(self.name) and \
            self.Validator.isValidPhone(self.phone) and \
            self.Validator.validAddress(self.address) and \
            self.Validator.isValidCity(self.city) and \
            self.Validator.isValidState(self.state) and \
            self.Validator.isValidZip(self.zipcode):
+
             if self.mode == "add":
                 self.gui.addressBook.addContact(**{"name": self.name, "phone": self.phone, "address": self.address, "address2": self.address2, "city": self.city, "state": self.state, "zipcode": self.zipcode})
                 self.gui.addressBook.sort(self.gui.addressBook.sortMethod[0],self.gui.addressBook.sortMethod[1])

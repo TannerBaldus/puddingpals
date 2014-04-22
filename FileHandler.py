@@ -1,5 +1,7 @@
 from Validator import Validator
 import csv
+from Validator import *
+
 class FileHandler(object):
 
 	def __init__(self):
@@ -14,12 +16,11 @@ class FileHandler(object):
 
 		return ''
 
-
 	def splitLast(self,last):
 		row = last.split(' ')
 		stateIndex = None
 		for index, el in enumerate(row):
-			print el
+			# print el
 			if self.Validator.isValidState(el):
 
 				stateIndex = index
@@ -34,10 +35,6 @@ class FileHandler(object):
 			return ['','','']
 
 
-
-
-
-
 	def readUSPS(self,filepath):
 		tsv = open(filepath,'r')
 		reader = csv.DictReader(tsv, delimiter='\t',restval='')
@@ -45,7 +42,7 @@ class FileHandler(object):
 
 		for row in reader:
 			attr ={} 
-			print row
+			# print row
 			last = self.splitLast(row['Last'])
 			attr['name'] = row['Recipient']
 			attr['phone'] = self.ValidAttr('phone',row['Phone'])
@@ -72,4 +69,3 @@ class FileHandler(object):
 			attributes['Delivery'] = contact.getAttr('address2')
 			attributes['Phone'] = contact.getAttr('phone')
 			writer.writerow(attributes)
-

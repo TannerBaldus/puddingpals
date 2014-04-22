@@ -56,16 +56,18 @@ class ABTest(unittest.TestCase):
 	def testReadTSV(self):
 		ab = AddressBook() 
 		ab.loadTSV('testTSV/twoWord.tsv')
-		c1 = {'name':'Texas Dan', 'phone':'5553779285','address':'551 W 13th', 'zipcode':'60155'}
-		self.assertEqual(ab.contacts[0].attrs,c1)
+		c1 = {'name':'Texas Dan', 'phone':'555.377.9285','address':'551 W 13th', 'zipcode':'60155'}
+		abContact = ab.contacts[0]
+		for key in c1:
+			self.assertEqual(abContact.getAttr(key),c1[key])
 
 
 	def testGoodLabel(self):
 		ab = AddressBook()
 		c1 = {'name':'Texas Dan', 'phone':'555.377.9285','address':'551 W 13th', 'zipcode':'60155', 'state':'TX',
-		'city':'Dallas','address2':''}
+		'city':'San Antonio','address2':''}
 		ab.addContact(**c1)
-		label = "Texas Dan\n551 W 13th\nDallas, TX 60155"
+		label = "Texas Dan\n551 W 13th\nSan Antonio, TX 60155"
 		self.assertEqual(ab.contacts[0].getLabel(),label)
 
 
