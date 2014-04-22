@@ -1,4 +1,5 @@
 from Gui import *
+from Validator import Validator
 
 class ContactBox(wx.Frame):
     def __init__(self, gui, mode, name='', phone='', address='', address2='', city='', state='', zipcode='', index=0):
