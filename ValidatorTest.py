@@ -44,7 +44,11 @@ class ValidatorTest(unittest.TestCase):
         v = Validator()
         filein = 'testTSV/test.csv'
         self.assertFalse(v.isValidUSPS(filein))
-        
+    
+    def testGoodTSV(self):
+        v = Validator()
+        filein = 'testTSV/twoWord.tsv'
+        self.assertTrue(v.isValidUSPS(filein))
     
 
 if __name__ == '__main__':

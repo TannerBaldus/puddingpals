@@ -62,11 +62,11 @@ class Validator(object):
         if name: return True
         return False
 
-    def isValidUSPS(self,filein):
-        if os.path.isfile(filein) and filein.endswith('.tsv'):
-            reader = csv.DictReader(filein)
-            row = reader.next()
-            return all(field in row for field in self.uspsFields)
+    def isValidUSPS(self,filepath):
+        if os.path.isfile(filepath) and filepath.endswith('.tsv'):
+            filein = open(filepath)
+            reader = csv.DictReader(filein, delimiter='\t',restval='')
+            return all( field in reader.fieldnames for field in self.uspsFields)
         return False
 
     def isValidAddress(self,address):

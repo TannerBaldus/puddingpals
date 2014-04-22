@@ -1,5 +1,5 @@
 import csv
-filein = open('testTSV/badformat.tsv')
+filein = open('testTSV/twoWord.tsv')
+usps = ['Last','Delivery','Second','Recipient','Phone']
 reader = csv.DictReader(filein,delimiter='\t')
-for row in reader:
-	print row
+print all( field in reader.fieldnames for field in usps)

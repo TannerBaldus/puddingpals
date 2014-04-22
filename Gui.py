@@ -12,6 +12,7 @@ class GUI(wx.Frame):
         self.saveName = ""
         self.create_menu()
         self.create_main_panel()
+        self.validation = Validator()
 
 
     def create_menu(self):
@@ -209,7 +210,8 @@ class GUI(wx.Frame):
         if openFileDialog.ShowModal() == wx.ID_CANCEL:
             return
         inFilePath = openFileDialog.GetPath()
-        if Validator.isValidTSV(inFilePath):
+        print inFilePath
+        if self.validation.isValidUSPS(inFilePath):
             newGui = GUI()
             newGui.addressBook.loadTSV(inFilePath)
             newGui.saveName = inFilePath
@@ -244,7 +246,7 @@ class GUI(wx.Frame):
         if openFileDialog.ShowModal() == wx.ID_CANCEL:
             return
         inFilePath = openFileDialog.GetPath()
-        if Validator.isValidTSV(inFilePath):
+        if self.validation.isValidUSPS(inFilePath):
             temp = AddressBook()
             temp.loadTSV(inFilePath)
             for contact in temp.contacts:
