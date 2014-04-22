@@ -17,21 +17,43 @@ class FileHandler(object):
         return ''
 
     def splitLast(self,last):
+        city =''
+        state = ''
+        zipcode = ''
         row = last.split(' ')
+        if len(row)==1:
+            if self.Validator.isValidState(row[0]):
+                state = row[0]
+            elif row[0].isdigit():
+                zipcode = row[0]
+            else:
+                city = row[0]
+
         if len(row)>3:
             stateIndex = None
             for index, el in enumerate(row):
-                # print el
+                # print 
                 if self.Validator.isValidState(el):
                     stateIndex = index
 
             if stateIndex:
-                city = ' '.join(row[0:stateIndex])
                 state = row[stateIndex]
-                zipcode = row[stateIndex+1]
-                return [city,state,zipcode]
+                if stateIndex+1 == len(row):
+                    city = ' '.join(row[0:stateIndex])
+                elif stateIndex == 0:
+                    zipcode = row[stateIndex+1]
+                else:
+                    city = ' '.join(row[0:stateIndex])
+                    state = row[stateIndex]
+                    zipcode = row[stateIndex+1]
+            else:
+                if row[len(row)-1].isdigit():
+                    zipcode = row[len(row)-1]
+                    city = ' '.join(row[0:len(row)-1])
+                else:
+                    city = ' '.join(row)
 
-        return ['','','']
+        return [city,state,zipcode]
 
 
     def readUSPS(self,filepath):
@@ -69,6 +91,7 @@ class FileHandler(object):
             attributes['Delivery'] = contact.getAttr('address2')
             attributes['Phone'] = contact.getAttr('phone')
             writer.writerow(attributes)
+
 if __name__ == '__main__':
     f = FileHandler()
-    f.readUSPS('testTSV/testero.tsv')
+    f.readUSPS('testTSV/lastTorture.tsv')
