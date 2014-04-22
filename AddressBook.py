@@ -34,11 +34,6 @@ class AddressBook(object):
         for index in selected:
             del self.contacts[index]
 
-
-    def setTSVfile(self,filepath):
-        self.tsvfile = filepath
-
-
     def loadTSV(self, filepath):
        fromTSV = self.FileHandler.readUSPS(filepath)
        for attr in fromTSV :
