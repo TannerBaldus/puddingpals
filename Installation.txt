@@ -1,0 +1,7 @@
+For Windows:
+    The only step required is to download Jpp.exe from the executbales directory. It's a standalone binary so all that is needed to run
+    Jello Puddin Pals is to open the exe.
+For OSX:
+    The only step required is to download Jpp.app from the executbales directory. It's a standalone binary so all that is needed to run      
+    Jello Puddin Pals is to open the app.
+
