@@ -70,7 +70,8 @@ class FileHandler(object):
             attr['city'] = self.ValidAttr('city',last[0])
             attr['state'] = self.ValidAttr('state',last[1])
             attr['zipcode'] = self.ValidAttr('zipcode',last[2])
-            attributes.append(attr)
+            if attributes['name']:
+                attributes.append(attr)
         return attributes
 
 
