@@ -21,21 +21,17 @@ class FileHandler(object):
         state = ''
         zipcode = ''
         row = last.split(' ')
-        print row
         if len(row)==1:
-            print row[0]
             if self.Validator.isValidState(row[0]):
                 state = row[0]
             elif row[0].isdigit():
                 zipcode = row[0]
-                print zipcode
             else:
                 city = row[0]
 
         else:
             stateIndex = None
             for index, el in enumerate(row):
-                # print 
                 if self.Validator.isValidState(el):
                     stateIndex = index
 
@@ -66,7 +62,6 @@ class FileHandler(object):
 
         for row in reader:
             attr ={} 
-            # print row
             last = self.splitLast(row['Last'])
             attr['name'] = row['Recipient']
             attr['phone'] = self.ValidAttr('phone',row['Phone'])
